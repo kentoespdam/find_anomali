@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "find_anomali",
+  "project_id": "411493c0-3c8d-48a8-8c02-83e0627bd539"
+}
