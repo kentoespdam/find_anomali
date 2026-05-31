@@ -1,69 +1,106 @@
 # Project Instructions for AI Agents
 
-This file provides instructions and context for AI coding agents working on this project.
+**Source of truth produk:** [`PRD.md`](./PRD.md). Sebelum implementasi/perubahan logika deteksi, aturan, threshold, skema CSV, atau modul (`detector`, `config`, `db`, `exporter`, `cli`) — baca `PRD.md` dan jangan menyimpang darinya tanpa konfirmasi user.
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
-## Beads Issue Tracker
+## Pre-Coding Rules (WAJIB)
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
+Baca sebelum menulis/mengedit kode. Urutannya mengikat.
 
-### Quick Reference
+1. [`docs/rules/00-pre-coding.md`](./docs/rules/00-pre-coding.md) — alur context check (PRD/ADR/issues) + checklist start sesi.
+2. [`docs/rules/01-gitnexus.md`](./docs/rules/01-gitnexus.md) — wajib pakai GitNexus untuk navigasi & impact (bukan `grep`).
+3. [`docs/rules/02-context7.md`](./docs/rules/02-context7.md) — wajib pakai Context7 untuk docs library/framework terbaru.
+
+## Project Summary
+
+CLI Python untuk deteksi anomali pemakaian air pra-cetak tagihan PDAM. Membaca table `rekairnow` dari MySQL, menerapkan aturan deteksi yang dikonfigurasi via `.env`, output CSV. Detail lengkap (problem, user stories, aturan, modul, threshold, testing) ada di `PRD.md`.
+
+**Stack:** Python 3, `mysql-connector-python`, `python-dotenv`, `pandas`, `pytest`.
+
+## Build & Test
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
+# (Isi setelah scaffolding selesai)
+# pip install -r requirements.txt
+# pytest
+# python -m anomali  # atau entrypoint CLI yang dipilih
 ```
 
-### Rules
+## Beads Issue Tracker
 
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+Project ini pakai **bd (beads)**. Jalankan `bd prime` untuk command reference lengkap.
+
+```bash
+bd ready                    # cari work yang siap
+bd show <id>                # detail issue
+bd update <id> --claim      # claim work
+bd close <id>               # tutup
+bd remember "insight"       # simpan knowledge lintas sesi (jangan pakai MEMORY.md)
+```
+
+**Aturan:**
+- Pakai `bd` untuk SEMUA task tracking — jangan TodoWrite/TaskCreate/markdown TODO.
+- Pakai `bd remember`, bukan `MEMORY.md`.
+- Buat issue **sebelum** menulis kode; tandai `in_progress` saat mulai.
+
+## Non-Interactive Shell
+
+Aliases sistem bisa memaksa `-i` (prompt y/n) → agent hang. Selalu pakai flag non-interaktif:
+
+```bash
+cp -f / mv -f / rm -f       # NOT cp/mv/rm tanpa flag
+rm -rf dir                  # NOT rm -r
+apt-get -y …                # auto-yes
+ssh -o BatchMode=yes …      # fail, jangan prompt
+```
 
 ## Session Completion
 
-**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
+Sebelum bilang "done", jalankan checklist berikut. Kerja BELUM selesai sampai `git push` sukses.
 
-**MANDATORY WORKFLOW:**
-
-1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
+1. **File follow-up issues** untuk sisa kerja.
+2. **Quality gates** (jika kode berubah): `pytest`, linter, build.
+3. **Update issue status:** `bd close <id1> <id2> …`.
+4. **Push:**
    ```bash
    git pull --rebase
    bd dolt push
    git push
-   git status  # MUST show "up to date with origin"
+   git status                # harus "up to date with origin"
    ```
-5. **Clean up** - Clear stashes, prune remote branches
-6. **Verify** - All changes committed AND pushed
-7. **Hand off** - Provide context for next session
+5. **Clean up:** clear stashes, prune remote branches.
+6. **Verify & hand off.**
 
-**CRITICAL RULES:**
-- Work is NOT complete until `git push` succeeds
-- NEVER stop before pushing - that leaves work stranded locally
-- NEVER say "ready to push when you are" - YOU must push
-- If push fails, resolve and retry until it succeeds
-<!-- END BEADS INTEGRATION -->
+**JANGAN** stop sebelum push, jangan bilang "ready to push when you are" — push sendiri. Kalau push gagal, resolve dan retry.
 
+## GitNexus — Code Intelligence
 
-## Build & Test
+Project ini di-index sebagai **find_anomali**. Pakai MCP tools GitNexus untuk navigasi & impact analysis.
 
-_Add your build and test commands here_
+**gitnexus repo** : `gitnexus://repo/find_anomali`.
 
-```bash
-# Example:
-# npm install
-# npm test
-```
+**Wajib:**
+- Sebelum mengedit symbol (function/class/method): `gitnexus_impact({target, direction: "upstream"})`. Laporkan blast radius ke user. Warn jika HIGH/CRITICAL.
+- Sebelum commit: `gitnexus_detect_changes()` untuk verifikasi scope.
+- Eksplorasi: `gitnexus_query({query})` dan `gitnexus_context({name})` — bukan grep.
+- Rename: `gitnexus_rename` — bukan find-and-replace.
 
-## Architecture Overview
+Jika tool warn stale: `npx gitnexus analyze`.
 
-_Add a brief overview of your project architecture_
+**Resources:** `gitnexus://repo/find_anomali/{context,clusters,processes,process/{name}}`.
 
-## Conventions & Patterns
+**Skill files** (`.claude/skills/gitnexus/*/SKILL.md`):
 
-_Add your project-specific conventions here_
+| Task | Skill |
+|------|-------|
+| Arsitektur / "how does X work?" | `gitnexus-exploring` |
+| Blast radius | `gitnexus-impact-analysis` |
+| Debug | `gitnexus-debugging` |
+| Refactor / rename / extract | `gitnexus-refactoring` |
+| Tools & schema reference | `gitnexus-guide` |
+| Index/status/wiki CLI | `gitnexus-cli` |
+
+## Conventions
+
+- Logika deteksi (`detector`) **harus** murni — tanpa I/O DB/filesystem — sesuai keputusan di `PRD.md` agar dapat di-unit-test tanpa MySQL.
+- Threshold tidak di-hardcode di luar default config; semua tunable lewat `.env`. Lihat `PRD.md` untuk daftar key & default.
+- Satu baris bisa dapat banyak kategori anomali (separator `;` untuk kategori, ` | ` untuk keterangan).
