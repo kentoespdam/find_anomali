@@ -1,4 +1,12 @@
 
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
