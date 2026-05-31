@@ -19,20 +19,20 @@ Parent epic: `find_anomali-qb1` (jangan di-claim; akan tertutup setelah semua an
 
 ### 1. `find_anomali-f1t` — Tracer bullet: scaffolding + METER_MUNDUR
 
-**Type:** AFK · **Blocks:** 4 slice berikutnya · **Status:** ready
+**Type:** AFK · **Blocks:** 4 slice berikutnya · **Status:** ✓ done
 
-- [ ] `bd update find_anomali-f1t --claim`
-- [ ] `requirements.txt` berisi `mysql-connector-python`, `python-dotenv`, `pandas`, `pytest`
-- [ ] `.env.example` berisi `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_TABLE` (default `rekairnow`), `OUTPUT_PATH` (default `anomali.csv`)
-- [ ] `.env` di-gitignore
-- [ ] `config` module: load `.env`, expose typed config dengan default
-- [ ] `db` module: koneksi MySQL, return DataFrame `SELECT nosamw, met_l, met_k, pakai, rata2 FROM <DB_TABLE>`
-- [ ] `detector` module: pure (no I/O), input record + threshold → list kategori + keterangan
-- [ ] `detector` implementasi rule `METER_MUNDUR` saja
-- [ ] `exporter` tulis CSV dengan skema penuh: `nosamw, met_l, met_k, pakai, rata2, selisih_meter, selisih_vs_rata2, rasio, kategori_anomali, keterangan`
-- [ ] `python -m anomali` jalan end-to-end (config → db → detector → exporter)
-- [ ] `tests/test_detector.py`: positive `METER_MUNDUR` + negative normal-row, pytest hijau
-- [ ] `bd close find_anomali-f1t`
+- [x] `bd update find_anomali-f1t --claim`
+- [x] `requirements.txt` berisi `mysql-connector-python`, `python-dotenv`, `pandas`, `pytest`
+- [x] `.env.example` berisi `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_TABLE` (default `rekairnow`), `OUTPUT_PATH` (default `anomali.csv`)
+- [x] `.env` di-gitignore
+- [x] `config` module: load `.env`, expose typed config dengan default
+- [x] `db` module: koneksi MySQL, return DataFrame `SELECT nosamw, met_l, met_k, pakai, rata2 FROM <DB_TABLE>`
+- [x] `detector` module: pure (no I/O), input record + threshold → list kategori + keterangan
+- [x] `detector` implementasi rule `METER_MUNDUR` saja
+- [x] `exporter` tulis CSV dengan skema penuh: `nosamw, met_l, met_k, pakai, rata2, selisih_meter, selisih_vs_rata2, rasio, kategori_anomali, keterangan`
+- [x] `python -m anomali` jalan end-to-end (config → db → detector → exporter)
+- [x] `tests/test_detector.py`: positive `METER_MUNDUR` + negative normal-row, pytest hijau
+- [x] `bd close find_anomali-f1t`
 
 ---
 
