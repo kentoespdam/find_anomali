@@ -38,8 +38,10 @@ Aturan deteksi mencakup anomali fisik (meter mundur, mismatch kalkulasi, mismatc
 ## Implementation Decisions
 
 **Stack & runtime**
-- Python 3 CLI script, dijalankan dari terminal.
-- Dependencies: `mysql-connector-python` (driver), `python-dotenv` (load `.env`), `pandas` (manipulasi data dan export CSV).
+- Python 3.12 CLI, dijalankan dari terminal lewat entry point `find-anomali` (atau `python -m anomali`).
+- Project manager: **uv** (Astral) — manage interpreter, dependencies, lockfile. Manifest di `pyproject.toml` (PEP 621 + PEP 735), reproducibility via `uv.lock`. Lihat ADR `docs/adr/0001-adopsi-uv-sebagai-project-manager.md`.
+- Build backend: `hatchling`. Layout flat (package `anomali/` di root).
+- Runtime dependencies: `mysql-connector-python` (driver), `python-dotenv` (load `.env`), `pandas` (manipulasi data dan export CSV). Dev dep: `pytest`.
 - Konfigurasi dibaca dari `.env` di working directory; `.env.example` di-commit sebagai template; `.env` di-gitignore.
 
 **Modul**

@@ -14,16 +14,28 @@ Baca sebelum menulis/mengedit kode. Urutannya mengikat.
 
 CLI Python untuk deteksi anomali pemakaian air pra-cetak tagihan PDAM. Membaca table `rekairnow` dari MySQL, menerapkan aturan deteksi yang dikonfigurasi via `.env`, output CSV. Detail lengkap (problem, user stories, aturan, modul, threshold, testing) ada di `PRD.md`.
 
-**Stack:** Python 3, `mysql-connector-python`, `python-dotenv`, `pandas`, `pytest`.
+**Stack:** Python 3.12 (managed by uv), `mysql-connector-python`, `python-dotenv`, `pandas`, `pytest`. Build backend: `hatchling`. Dependency manifest: `pyproject.toml` (PEP 621 + PEP 735); lockfile `uv.lock`.
 
 ## Build & Test
 
+Project ini pakai **uv** (Astral). Lihat ADR `docs/adr/0001-adopsi-uv-sebagai-project-manager.md`.
+
 ```bash
-# (Isi setelah scaffolding selesai)
-# pip install -r requirements.txt
-# pytest
-# python -m anomali  # atau entrypoint CLI yang dipilih
+uv sync                       # install runtime + dev deps dari uv.lock
+uv run pytest                 # jalankan test
+uv run find-anomali           # jalankan CLI (entry point: anomali.cli:run)
 ```
+
+**Manajemen dependensi:**
+```bash
+uv add <pkg>                  # tambah runtime dep
+uv add --dev <pkg>            # tambah dev dep ke [dependency-groups] dev
+uv remove <pkg>               # hapus dep
+uv lock --upgrade             # refresh lockfile (resolve ulang)
+uv lock --upgrade-package <pkg>  # refresh satu package saja
+```
+
+`uv.lock` dan `.python-version` di-commit. Jangan edit `uv.lock` manual.
 
 ## Beads Issue Tracker
 

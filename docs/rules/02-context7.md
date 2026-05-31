@@ -7,7 +7,7 @@ verifikasi lewat Context7 sebelum menulis kode.
 
 ## Kapan WAJIB Pakai Context7
 
-- Setup / install library baru (mis. nambah dependency di `requirements.txt`).
+- Setup / install library baru (mis. `uv add <pkg>` ke `pyproject.toml`).
 - Pakai API library yang sudah ada (`pandas`, `mysql-connector-python`,
   `python-dotenv`, `pytest`, dll.) — terutama signature fungsi, parameter,
   default value, exception, atau best-practice idiom.
